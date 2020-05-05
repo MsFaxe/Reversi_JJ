@@ -16,8 +16,8 @@ public class Main extends Application /*implements EventHandler<ActionEvent> */{
     Button buttonStart, buttonReset, buttonAlert, buttonConfirm, buttonClose;
 
     private Image imageback = new Image("file:resources/background.jpg");
-    private Image blackDot = new Image("file:resources/black_dot100.jpg");
-    private Image whiteDot = new Image("file:resources/white_dot100.jpg");
+    private Image blackDot = new Image("file:resources/black_dot100.png");
+    private Image whiteDot = new Image("file:resources/white_dot100.png");
     private FlowPane dots = new FlowPane(Orientation.HORIZONTAL);
 
     public static void main(String[] args) {
@@ -29,12 +29,16 @@ public class Main extends Application /*implements EventHandler<ActionEvent> */{
         stage = primaryStage;
         stage.setTitle("Reversi");
 
+        Pane pane = new HBox(15);
+        pane.getChildren().add(new ImageView(blackDot));
+        Scene dotScene = new Scene(pane, 600,300);
 
         //username screen
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(10,10,10,10));
         grid.setVgap(8);
         grid.setHgap(10);
+        Scene scene = new Scene(grid, 500,300);
 
         //username label
         Label usernameLabel = new Label("username");
@@ -124,7 +128,7 @@ public class Main extends Application /*implements EventHandler<ActionEvent> */{
 
         ImageView pown1 = new ImageView(whiteDot);
         dots.getChildren().add(pown1);
-        GridPane.setConstraints(pown1, 0,0);
+        //GridPane.setConstraints(pown1, 0,0);
         GridPane.setConstraints(buttonReset, 7,7);
 
         BackgroundSize backgroundSize = new BackgroundSize(800, 800, true, true, true, false);
@@ -139,9 +143,7 @@ public class Main extends Application /*implements EventHandler<ActionEvent> */{
         scene2 = new Scene(layout2, 800,800);
 
 
-        Scene scene = new Scene(grid, 500,300);
-
-        stage.setScene(scene);
+        stage.setScene(scene2);
         stage.show();
     }
 
