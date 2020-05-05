@@ -13,14 +13,14 @@ public class GameRulesScene {
     Button buttonAlert;
     Button buttonConfirm;
     static Button buttonClose;
-    Stage stage;
+    static Stage stage;
     static Scene scene1;
 
     public void loadGameRulesScene() {
         Label label1 = new Label("Reversi game - game rules");
 
         buttonStart = new Button("START");
-        buttonStart.setOnAction(e -> stage.setScene(Board.scene2));
+        buttonStart.setOnAction(e -> Main.stage.setScene(Board.scene2));
 
         buttonAlert = new Button("Alert");
         buttonAlert.setOnAction(e -> AlertBox.badMovement("Alert", "You can't do this"));

@@ -16,7 +16,7 @@ public class Board {
     private Image whiteDot = new Image("file:resources/whiteDot.png");
     private GridPane dots = new GridPane(/*Orientation.HORIZONTAL*/);
 
-    Stage stage;
+    //Stage stage;
     static Scene scene2;
 
     public void loadBoard(){
@@ -27,7 +27,7 @@ public class Board {
 
         //Button2
         Button buttonReset = new Button("BACK");
-        buttonReset.setOnAction(e -> stage.setScene(GameRulesScene.scene1));
+        buttonReset.setOnAction(e -> Main.stage.setScene(GameRulesScene.scene1));
 
         //layaout2
         GridPane layout2 = new GridPane();
