@@ -4,21 +4,15 @@ import javafx.application.Application;
 import javafx.geometry.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.*;
 
 public class Main extends Application /*implements EventHandler<ActionEvent> */{
 
-    Stage stage;
-    Scene scene1, scene2;
-    Button buttonStart, buttonReset, buttonAlert, buttonConfirm, buttonClose;
+    static Stage stage;
+    static Scene scene1;
+    Button buttonStart, buttonAlert, buttonConfirm, buttonClose;
 
-    private Image imageback = new Image("file:resources/background.jpg");
-    private Image blackDot = new Image("file:resources/black_dot100.png");
-    private Image whiteDot = new Image("file:resources/white_dot100.png");
-    private FlowPane dots = new FlowPane(Orientation.HORIZONTAL);
 
     public static void main(String[] args) {
         launch(args);
@@ -29,9 +23,6 @@ public class Main extends Application /*implements EventHandler<ActionEvent> */{
         stage = primaryStage;
         stage.setTitle("Reversi");
 
-        Pane pane = new HBox(15);
-        pane.getChildren().add(new ImageView(blackDot));
-        Scene dotScene = new Scene(pane, 600,300);
 
         //username screen
         GridPane grid = new GridPane();
@@ -79,7 +70,7 @@ public class Main extends Application /*implements EventHandler<ActionEvent> */{
         Label label1 = new Label("Reversi game - game rules");
 
         buttonStart = new Button("START");
-        buttonStart.setOnAction(e -> stage.setScene(scene2));
+        buttonStart.setOnAction(e -> stage.setScene(Board.scene2));
 
         buttonAlert = new Button("Alert");
         buttonAlert.setOnAction(e -> AlertBox.badMovement("Alert", "You can't do this"));
@@ -115,35 +106,10 @@ public class Main extends Application /*implements EventHandler<ActionEvent> */{
 
         scene1 = new Scene(borderPane, 300,300);
 
-        //Button2
-        buttonReset = new Button("BACK");
-        buttonReset.setOnAction(e -> stage.setScene(scene1));
 
-        //layaout2
-        GridPane layout2 = new GridPane();
-        layout2.setAlignment(Pos.CENTER);
-        layout2.setPadding(new Insets(10,10,10,10));
-        layout2.setVgap(10);
-        layout2.setHgap(10);
-
-        ImageView pown1 = new ImageView(whiteDot);
-        dots.getChildren().add(pown1);
-        //GridPane.setConstraints(pown1, 0,0);
-        GridPane.setConstraints(buttonReset, 7,7);
-
-        BackgroundSize backgroundSize = new BackgroundSize(800, 800, true, true, true, false);
-        layout2.setBackground(new Background(new BackgroundImage(imageback,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.CENTER,
-                backgroundSize)));
-
-        layout2.add(dots,1,1,1,1);
-        layout2.getChildren().add(buttonReset);
-        scene2 = new Scene(layout2, 800,800);
-
-
-        stage.setScene(scene2);
+        Board board = new Board();
+        board.loadBoard();
+        stage.setScene(board.scene2);
         stage.show();
     }
 
