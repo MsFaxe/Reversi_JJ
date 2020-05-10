@@ -24,8 +24,7 @@ public class Main extends Application /*implements EventHandler<ActionEvent> */{
         StartGameScene startGameScene = new StartGameScene();
         startGameScene.loadStartGameScene();
 
-        GameRulesScene gameRulesScene = new GameRulesScene();
-        gameRulesScene.loadGameRulesScene();
+
 
         Board board = new Board();
         board.loadBoard();
@@ -35,8 +34,6 @@ public class Main extends Application /*implements EventHandler<ActionEvent> */{
             e.consume(); //bez tego się zamknie nawet jak jednak się rozmyślę
             closeProgram();
         });
-        GameRulesScene.buttonClose.setOnAction(e -> closeProgram());
-
 
         stage.setScene(startGameScene.scene);
         stage.show();

@@ -33,6 +33,7 @@ public class GameRulesScene {
 
 
         buttonClose = new Button("Close program");
+        //buttonClose.setOnAction(e -> closeProgram());
 
 
         //layout1 - games rules
@@ -50,6 +51,9 @@ public class GameRulesScene {
         borderPane.setTop(topMenu);
         borderPane.setLeft(leftMenu);
 
-        Scene cene1 = new Scene(borderPane, 300, 300);
+        stage = new Stage();
+        scene1 = new Scene(borderPane, 300, 300);
+        stage.setScene(scene1);
+        stage.show();
     }
 }
