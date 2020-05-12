@@ -1,4 +1,4 @@
-package test;
+package test2;
 
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -7,11 +7,9 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 
 public class StartGameScene {
-    private static String pawnColor;
+    public static String pawnColor;
 
     public static String getPawnColor() {
         return pawnColor;

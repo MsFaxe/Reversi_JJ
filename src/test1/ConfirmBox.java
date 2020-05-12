@@ -1,6 +1,5 @@
-package sample;
+package test1;
 
-import com.sun.xml.internal.bind.v2.runtime.ClassBeanInfoImpl;
 import javafx.geometry.*;
 import javafx.scene.*;
 import javafx.scene.control.*;

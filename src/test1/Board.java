@@ -1,13 +1,11 @@
-package sample;
+package test1;
 
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.stage.Stage;
 
 public class Board {
 
@@ -57,13 +55,6 @@ public class Board {
         Button testPown = new Button("", pown1);
         dots.getChildren().addAll(pown1, pown2, pown3, pown4);
         // GridPane.setConstraints(buttonReset, 0,0);
-
-//        BackgroundSize backgroundSize = new BackgroundSize(800, 800, true, true, true, false);
-//        layout2.setBackground(new Background(new BackgroundImage(imageback,
-//                BackgroundRepeat.NO_REPEAT,
-//                BackgroundRepeat.NO_REPEAT,
-//                BackgroundPosition.CENTER,
-//                backgroundSize)));
 
         layout2.add(dots,1,1,1,1);
         layout2.getChildren().add(testPown);

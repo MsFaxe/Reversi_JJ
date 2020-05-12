@@ -1,10 +1,7 @@
-package sample;
+package test1;
 
 import javafx.application.Application;
-import javafx.geometry.*;
 import javafx.scene.*;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
 import javafx.stage.*;
 
 public class Main extends Application /*implements EventHandler<ActionEvent> */{
@@ -23,8 +20,6 @@ public class Main extends Application /*implements EventHandler<ActionEvent> */{
 
         StartGameScene startGameScene = new StartGameScene();
         startGameScene.loadStartGameScene();
-
-
 
         Board board = new Board();
         board.loadBoard();

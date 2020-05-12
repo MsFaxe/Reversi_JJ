@@ -1,4 +1,4 @@
-package sample;
+package test1;
 
 import javafx.geometry.*;
 import javafx.scene.*;
