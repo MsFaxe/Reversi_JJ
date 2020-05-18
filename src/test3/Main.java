@@ -1,4 +1,4 @@
-package test2;
+package test3;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -6,18 +6,22 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
     static Stage stage;
+
     public static void main(String[] args) {
         launch(args);
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage){
         stage = primaryStage;
         stage.setTitle("Reversi");
 
-        StartGameScene start = new StartGameScene();
+        BoarGameScene board = new BoarGameScene();
+        stage.setScene(board.loadGame());
 
-        stage.setScene(start.loadStart());
+        GameLogic game = new GameLogic();
+
+        game.startGame();
         stage.show();
     }
 }
