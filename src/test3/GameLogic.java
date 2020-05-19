@@ -1,6 +1,10 @@
 package test3;
 
 import java.util.*;
+import java.util.concurrent.BlockingDeque;
+import java.util.stream.Collectors;
+
+import static java.lang.Math.abs;
 
 public class GameLogic {
 
@@ -49,54 +53,110 @@ public class GameLogic {
         field(4,3).putPawn(BLACK_PAWN);
         field(4,4).putPawn(WHITE_PAWN);
 
+//        field(3,2).putPawn(WHITE_PAWN);
+//        field(4,2).putPawn(WHITE_PAWN);
+//        field(5,2).putPawn(WHITE_PAWN);
+//        field(5,3).putPawn(WHITE_PAWN);
+//        field(5,4).putPawn(BLACK_PAWN);
+
         humanPlay();
     }
 
     private void humanPlay() {
-        System.out.println("human play");
+        System.out.println("\nhuman play");
 
         for (Field field : listOfActivatedFields) {
+
             int rI = field.getRowIndex();
             int cI = field.getColumnIndex();
 
 
-            field.getFieldsLabel().setOnMouseClicked(e -> {
-                //check fields below
-                if (checkIfFieldExistAndItIsNotNullAndWhatColorHas(rI+1, cI, WHITE_PAWN)) {
-                    for (int i = 1; i < 8; i++) {
-                        if(checkIfFieldExistAndItIsNotNullAndWhatColorHas(rI+i, cI, BLACK_PAWN)) {
-                            clickEvent(field);
-                            break;
+            field.getFieldsLabel().setOnMouseClicked(a -> {
+
+                System.out.println("Człowiek kliknął: " + field);
+
+                // search enemies pawns
+                ArrayList<Field> listOfPawnsAroundEmptyFieldToClick = (ArrayList<Field>) listOfDeactivatedFields.stream()
+                        .filter(e -> e.getRowIndex() == rI + 1 || e.getRowIndex() == rI - 1 || e.getRowIndex() == rI)
+                        .filter(e -> e.getColumnIndex() == cI + 1 || e.getColumnIndex() == cI || e.getColumnIndex() == cI - 1)
+                        .filter(e -> e.getPawn().getColorOfPawn().equals(WHITE_PAWN))
+                        .collect(Collectors.toList());
+
+                //System.out.println(listOfPawnsAroundEmptyFieldToClick);
+
+
+                for (Field fieldWithPawn : listOfPawnsAroundEmptyFieldToClick) {
+
+
+                    //calculate vectors to check next fields
+                    int rVecCor = rI - fieldWithPawn.getRowIndex(); //row vector coordinate
+                    int cVecCor = cI - fieldWithPawn.getColumnIndex(); //column vector coordinate
+
+                    //System.out.println(rVecCor + ", " + cVecCor);
+
+
+                    //complete the list of pawns set in the direction of vector movement
+                    List<Field> listOfPawnsToReverse = new ArrayList<>();
+
+                    //System.out.println("List size: " + listOfPawnsToReverse.size());
+
+                    for (Field deactivateField : listOfDeactivatedFields) {
+                        for (int i = 1; i < 8; i++) {
+                            if (deactivateField.getRowIndex() == (rI - (i * rVecCor)) && deactivateField.getColumnIndex() == cI - (i * cVecCor)) {
+                                //System.out.println(deactivateField);
+                                listOfPawnsToReverse.add(deactivateField);
+                            }
                         }
                     }
-                }
 
-                //check fields under
-                else if (checkIfFieldExistAndItIsNotNullAndWhatColorHas(rI-1, cI, WHITE_PAWN)) {
-                    for (int i = 1; i < 8; i++) {
-                        if(checkIfFieldExistAndItIsNotNullAndWhatColorHas(rI-i, cI, BLACK_PAWN)) {
-                            clickEvent(field);
-                            break;
+                    //System.out.println("List size: " + listOfPawnsToReverse.size());
+
+
+                    //make the list of human player pawns, to reverse enemy pawn in the same line
+                    List<Field> humanPlayerPawns = new ArrayList<>();
+
+                    if (listOfPawnsToReverse.size() > 1) {
+                        for (Field pawnToReverse : listOfPawnsToReverse) {
+                            if (pawnToReverse.getPawn().getColorOfPawn().equals(BLACK_PAWN)) {
+                                //System.out.println(pawnToReverse);
+                                humanPlayerPawns.add(pawnToReverse);
+                                field.putPawn(BLACK_PAWN);
+                                activeEmptyFieldsAround(field);
+                            }
                         }
-                    }
-                }
 
-                //check fields on right
-                else if (checkIfFieldExistAndItIsNotNullAndWhatColorHas(rI, cI+1, WHITE_PAWN)) {
-                    for (int i = 1; i < 8; i++) {
-                        if(checkIfFieldExistAndItIsNotNullAndWhatColorHas(rI, cI+i, BLACK_PAWN)) {
-                            clickEvent(field);
-                            break;
-                        }
-                    }
-                }
+                        //System.out.println(humanPlayerPawns.size());
 
-                //check field on left
-                else if (checkIfFieldExistAndItIsNotNullAndWhatColorHas(rI, cI-1, WHITE_PAWN)) {
-                    for (int i = 1; i < 8; i++) {
-                        if(checkIfFieldExistAndItIsNotNullAndWhatColorHas(rI, cI-i, BLACK_PAWN)) {
-                            clickEvent(field);
-                            break;
+                        if (humanPlayerPawns.size() > 0) {
+
+                            //distance between player's pawns, necessary to reverse enemy pawns
+                            List<Integer> distanceBetweenPawns = new ArrayList<>();
+
+                            for (Field playerPawn : humanPlayerPawns) {
+                                int r = rI - playerPawn.getRowIndex();
+                                int c = cI - playerPawn.getColumnIndex();
+
+                                int absValue = abs(r + c);
+                                distanceBetweenPawns.add(absValue);
+                                //System.out.println(absValue);
+                            }
+
+                            int minDistance = Collections.min(distanceBetweenPawns);
+
+                            for (Field playerPawn: humanPlayerPawns){
+                                listOfPawnsToReverse.remove(playerPawn);
+                            }
+
+                            System.out.println("zmienione pola: ");
+                            //reverse enemy pawns
+                            for (Field everyField : listOfPawnsToReverse) {
+
+                                if (abs((rI - everyField.getRowIndex()) + (cI - everyField.getColumnIndex())) <= minDistance) {
+                                    everyField.reversePawn();
+                                    System.out.println(everyField);
+                                }
+                            }
+                            computerPlay();
                         }
                     }
                 }
@@ -104,183 +164,118 @@ public class GameLogic {
         }
     }
 
-    private void clickEvent(Field field){
-        field.putPawn(BLACK_PAWN);
-        activeEmptyFieldsAround(field);
-        reverseEnemyPawns(field);
-        computerPlay();
-    }
-
-    private boolean checkIfFieldExistAndItIsNotNullAndWhatColorHas(int rI, int cI, String pawnColor){
-        return primaryField(rI, cI) != null && primaryField(rI, cI).getPawn() != null && primaryField(rI, cI).getPawn().getColorOfPawn().equals(pawnColor);
-    }
-
 
     //the computer is trying to put a pawn on a random field
     private void computerPlay() {
-        System.out.println("computerPlay");
+        System.out.println("\ncomputerPlay");
 
-        HashSet<Field> set = listOfActivatedFields;
-        List<Field> list = new ArrayList<>(set);
+        List<Field> lista = new ArrayList<>(listOfActivatedFields);
 
-        System.out.println(list.size());
+        int sizeListOfActivatedFields = listOfActivatedFields.size();
+        int sizeLista = lista.size();
+
         Random random = new Random();
-        Field randomActivateField;
 
-        for (int j = list.size(); j>0 ;j--) {
+        for (int j = lista.size(); j > 0; j--) {
 
-            System.out.println(list.size());
+            Field field = lista.get(random.nextInt(j));
 
-            randomActivateField = list.get(random.nextInt(j));
-            System.out.println(randomActivateField);
 
-            int rI = randomActivateField.getRowIndex(); //rowIndex
-            int cI = randomActivateField.getColumnIndex(); //columnIndex
+            int rI = field.getRowIndex();
+            int cI = field.getColumnIndex();
 
-            int start;
+            if (sizeLista <= sizeListOfActivatedFields) {
 
-            if (checkIfFieldExistAndItIsNotNullAndWhatColorHas(rI + 1, cI, BLACK_PAWN)) {
-                start = 1;
-                System.out.println("start with " + start);
-            } else if (checkIfFieldExistAndItIsNotNullAndWhatColorHas(rI - 1, cI, BLACK_PAWN)) {
-                start = 2;
-                System.out.println("start with " + start);
-            } else if (checkIfFieldExistAndItIsNotNullAndWhatColorHas(rI, cI + 1, BLACK_PAWN)) {
-                start = 3;
-                System.out.println("start with " + start);
-            } else if (checkIfFieldExistAndItIsNotNullAndWhatColorHas(rI, cI - 1, BLACK_PAWN)) {
-                start = 4;
-                System.out.println("start with " + start);
-            } else {
-                list.remove(randomActivateField);
-                continue;
-            }
+                System.out.println("Komputer wylosował: " + field);
+                // search enemies pawns
+                ArrayList<Field> listOfPawnsAroundEmptyFieldToClick = (ArrayList<Field>) listOfDeactivatedFields.stream()
+                        .filter(e -> e.getRowIndex() == rI + 1 || e.getRowIndex() == rI - 1 || e.getRowIndex() == rI)
+                        .filter(e -> e.getColumnIndex() == cI + 1 || e.getColumnIndex() == cI || e.getColumnIndex() == cI - 1)
+                        .filter(e -> e.getPawn().getColorOfPawn().equals(BLACK_PAWN))
+                        .collect(Collectors.toList());
 
-            int help = 5;
+                System.out.println(listOfPawnsAroundEmptyFieldToClick);
 
-            while (start < 5) {
-                switch (start) {
-                    case 1:
+
+                for (Field fieldWithPawn : listOfPawnsAroundEmptyFieldToClick) {
+
+                    //calculate vectors to check next fields
+                    int rVecCor = rI - fieldWithPawn.getRowIndex(); //row vector coordinate
+                    int cVecCor = cI - fieldWithPawn.getColumnIndex(); //column vector coordinate
+
+                    System.out.println(rVecCor + ", " + cVecCor);
+
+
+                    //complete the list of pawns set in the direction of vector movement
+                    List<Field> listOfPawnsToReverse = new ArrayList<>();
+                    System.out.println("List size: " + listOfPawnsToReverse.size());
+
+                    for (Field deactivateField : listOfDeactivatedFields) {
                         for (int i = 1; i < 8; i++) {
-                            if (primaryField(rI + i, cI) != null && primaryField(rI + i, cI).getPawn() != null && primaryField(rI + i, cI).getPawn().getColorOfPawn().equals(WHITE_PAWN)) {
-                                randomActivateField.putPawn(WHITE_PAWN);
-                                activeEmptyFieldsAround(randomActivateField);
-                                reverseEnemyPawns(randomActivateField);
-
-                                humanPlay();
-                                help = 5;
-                                break;
-                            } else {
-                                help = 2;
+                            if (deactivateField.getRowIndex() == (rI - (i * rVecCor)) && deactivateField.getColumnIndex() == cI - (i * cVecCor)) {
+                                System.out.println(deactivateField);
+                                listOfPawnsToReverse.add(deactivateField);
                             }
                         }
-                        start = help;
-                        if (start == 5) break;
-                        System.out.println("out case 1: " + start);
+                    }
 
-                    case 2:
-                        for (int i = 1; i < 8; i++) {
-                            if (primaryField(rI - i, cI) != null && primaryField(rI - i, cI).getPawn() != null && primaryField(rI - i, cI).getPawn().getColorOfPawn().equals(WHITE_PAWN)) {
-                                randomActivateField.putPawn(WHITE_PAWN);
-                                activeEmptyFieldsAround(randomActivateField);
-                                reverseEnemyPawns(randomActivateField);
+                    System.out.println("List size: " + listOfPawnsToReverse.size());
 
-                                humanPlay();
-                                help = 5;
-                                break;
-                            } else {
-                                help = 3;
 
+                    //make the list of human player pawns, to reverse enemy pawn in the same line
+                    List<Field> humanPlayerPawns = new ArrayList<>();
+
+                    if (listOfPawnsToReverse.size() > 1) {
+                        for (Field pawnToReverse : listOfPawnsToReverse) {
+                            if (pawnToReverse.getPawn().getColorOfPawn().equals(WHITE_PAWN)) {
+                                System.out.println(pawnToReverse);
+                                humanPlayerPawns.add(pawnToReverse);
+                                field.putPawn(WHITE_PAWN);
+                                activeEmptyFieldsAround(field);
                             }
                         }
-                        start = help;
-                        if (start == 5) break;
-                        System.out.println("out case 2: " + start);
 
-                    case 3:
-                        for (int i = 1; i < 8; i++) {
-                            if (primaryField(rI, cI + i) != null && primaryField(rI, cI + i).getPawn() != null && primaryField(rI, cI + i).getPawn().getColorOfPawn().equals(WHITE_PAWN)) {
-                                randomActivateField.putPawn(WHITE_PAWN);
-                                activeEmptyFieldsAround(randomActivateField);
-                                reverseEnemyPawns(randomActivateField);
+                        System.out.println(humanPlayerPawns);
 
-                                humanPlay();
-                                help = 5;
-                                break;
-                            } else {
-                                help = 4;
+                        if (humanPlayerPawns.size() > 0) {
+                            //distance between player's pawns, necessary to reverse enemy pawns
+                            List<Integer> distanceBetweenPawns = new ArrayList<>();
+                            for (Field playerPawn : humanPlayerPawns) {
+                                int r = rI - playerPawn.getRowIndex();
+                                int c = cI - playerPawn.getColumnIndex();
+
+                                int absValue = abs(r + c);
+                                distanceBetweenPawns.add(absValue);
+                                System.out.println(absValue);
                             }
-                        }
-                        start = help;
-                        if (start == 5) break;
-                        System.out.println("out case 3: " + start);
 
-                    case 4:
-                        for (int i = 1; i < 8; i++) {
-                            if (primaryField(rI, cI - i) != null && primaryField(rI, cI - i).getPawn() != null && primaryField(rI, cI - i).getPawn().getColorOfPawn().equals(WHITE_PAWN)) {
-                                randomActivateField.putPawn(WHITE_PAWN);
-                                activeEmptyFieldsAround(randomActivateField);
-                                reverseEnemyPawns(randomActivateField);
+                            int minDistance = Collections.min(distanceBetweenPawns);
 
-                                humanPlay();
-                                help = 5;
-                                break;
-                            } else {
-                                help = 6;
+
+                            //listOfPawnsToReverse.remove(humanPlayerPawns);
+
+                            for (Field playerPawn: humanPlayerPawns){
+                                listOfPawnsToReverse.remove(playerPawn);
                             }
+
+                            System.out.println("zmienione pola: ");
+                            //reverse enemy pawns
+                            for (Field everyField : listOfPawnsToReverse) {
+
+                                if (abs((rI - everyField.getRowIndex()) + (cI - everyField.getColumnIndex())) <= minDistance) {
+                                    everyField.reversePawn();
+                                    System.out.println(everyField);
+                                }
+                            }
+                            humanPlay();
+                            sizeListOfActivatedFields = 0;
+                            break;
                         }
-                        start = help;
-                        if (start == 5) break;
-                        System.out.println("out case 4: " + start);
+                    }
+                    lista.remove(field);
+                    //break;
                 }
             }
-//            humanPlay();
-            if (start == 5) {
-                break;
-            } else {
-                list.remove(randomActivateField);
-                //continue;
-            }
         }
     }
-
-    public void reverseEnemyPawns(Field clickedField) {
-        int rI = clickedField.getRowIndex(); //rowIndex
-        int cI = clickedField.getColumnIndex(); //columnIndex
-        String color = clickedField.getPawn().getColorOfPawn();
-
-
-        //below
-        for (int i = 1; i < 8; i++) {
-            if (primaryField(rI + i, cI) == null || primaryField(rI + i, cI).getPawn() == null || primaryField(rI + i, cI).getPawn().getColorOfPawn().equals(color)) {
-                break;
-            }
-            primaryField(rI + i, cI).reversePawn();
-        }
-
-        //under
-        for (int i = 1; i < 8; i++) {
-            if (primaryField(rI - i, cI) == null || primaryField(rI - i, cI).getPawn() == null || primaryField(rI - i, cI).getPawn().getColorOfPawn().equals(color)) {
-                break;
-            }
-            primaryField(rI - i, cI).reversePawn();
-        }
-
-        //on right
-        for (int i = 1; i < 8; i++) {
-            if (primaryField(rI, cI + i) == null || primaryField(rI, cI + i).getPawn() == null || primaryField(rI, cI + i).getPawn().getColorOfPawn().equals(color)) {
-                break;
-            }
-            primaryField(rI, cI + i).reversePawn();
-        }
-
-        //on left
-        for (int i = 1; i < 8; i++) {
-            if (primaryField(rI, cI - i) == null || primaryField(rI, cI - i).getPawn() == null || primaryField(rI, cI - i).getPawn().getColorOfPawn().equals(color)) {
-                break;
-            }
-            primaryField(rI, cI - i).reversePawn();
-        }
-    }
-
 }
