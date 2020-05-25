@@ -69,11 +69,9 @@ public class BoardGameScene {
         return label;
     }
 
-    private Parent startingBoard(){
+    private Parent startingBoard(FieldsMap mapOfFields){
         BorderPane board = new BorderPane();
         VBox vBox = new VBox();
-
-        FieldsMap mapOfFields = new FieldsMap();
 
         for (int i = 0; i < 8; i++) { // i - rows
             HBox hBox = new HBox();
@@ -90,14 +88,14 @@ public class BoardGameScene {
         return board;
     }
 
-    public Scene loadGame(String username){
+    public Scene loadGame(String username, FieldsMap mapOfFields){
         BackgroundSize backgroundSize = new BackgroundSize(100, 100, true, true, true, false);
         BackgroundImage backgroundImage = new BackgroundImage(imageBack, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, backgroundSize);
         Background background = new Background(backgroundImage);
 
         BorderPane bord = new BorderPane();
         bord.setBackground(background);
-        bord.setTop(startingBoard());
+        bord.setTop(startingBoard(mapOfFields));
 
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(10,10,10,10));

@@ -31,13 +31,16 @@ public class StartGameScene {
         }
     }
 
+    FieldsMap mapOfFields = new FieldsMap();
+
     private Button buttonStartEasyGame(){
         BoardGameScene board = new BoardGameScene();
         GameLogic game = new GameLogic();
+        game.setFieldsMap(mapOfFields);
 
         Button button = new Button("Start easy mode");
         button.setOnAction(e -> {
-            Main.stage.setScene(board.loadGame(nameInput.getText()));
+            Main.stage.setScene(board.loadGame(nameInput.getText(), mapOfFields));
             game.setCOLOR_PAWNS(getPawnColor());
             game.startGame();
         });
@@ -47,11 +50,12 @@ public class StartGameScene {
     private Button buttonLoadGame() {
         BoardGameScene board = new BoardGameScene();
         GameLogic game = new GameLogic();
+        game.setFieldsMap(mapOfFields);
 
         Button button = new Button("Load Game");
 
         button.setOnAction(e -> {
-            Main.stage.setScene(board.loadGame(nameInput.getText()));
+            Main.stage.setScene(board.loadGame(nameInput.getText(), mapOfFields));
             game.setCOLOR_PAWNS(getPawnColor());
             try {
                 game.loadGame();

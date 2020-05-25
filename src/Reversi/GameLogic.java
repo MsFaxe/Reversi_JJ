@@ -24,8 +24,14 @@ public class GameLogic {
     private static final HashSet<Field> setOfActivatedFields = new HashSet<>();
     private static final HashSet<Field> setOfDeactivatedFields = new HashSet<>();
 
+    FieldsMap fieldsMap = new FieldsMap();
+
+    public void setFieldsMap(FieldsMap fieldsMap) {
+        this.fieldsMap = fieldsMap;
+    }
+
     public Field primaryField(int rowIndex, int columnIndex){
-        return FieldsMap.getField(rowIndex, columnIndex);
+        return fieldsMap.getField(rowIndex, columnIndex);
     }
 
     public Field field(int rowIndex, int columnIndex){
@@ -324,7 +330,7 @@ public class GameLogic {
         scanner.useDelimiter(" ");
         while(scanner.hasNext()) {
             //System.out.println(scanner.next() + scanner.next() + scanner.next());
-            field(Integer.parseInt(scanner.next()),Integer.parseInt(scanner.next())).putPawn(scanner.next());
+            field(Integer.parseInt(scanner.next()), Integer.parseInt(scanner.next())).putPawn(scanner.next());
         }
         scanner.close();
 
