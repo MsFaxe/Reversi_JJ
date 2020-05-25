@@ -5,13 +5,14 @@ import java.util.Map;
 
 public class FieldsMap {
 
-    private final Map<Integer,Field> mapOfEmptyFields = new HashMap<>();
+    private final Map<FieldsCoordinates,Field> mapOfEmptyFields = new HashMap<>();
 
-    public void addField(int fieldIndex, Field fieldsLabel) {
+    public void addField(FieldsCoordinates fieldIndex, Field fieldsLabel) {
         mapOfEmptyFields.put(fieldIndex, fieldsLabel);
     }
 
     public Field getField(int rowIndex, int columnIndex){
-      return mapOfEmptyFields.get(rowIndex*10+columnIndex);
+        FieldsCoordinates fC = new FieldsCoordinates(rowIndex, columnIndex);
+        return mapOfEmptyFields.get(fC);
     }
 }

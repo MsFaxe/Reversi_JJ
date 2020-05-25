@@ -2,33 +2,20 @@ package Reversi;
 
 import java.util.Objects;
 
-public class FieldsCoordinats {
-
+public class FieldsCoordinates {
     int i;
     int j;
 
-    public FieldsCoordinats(int i, int j) {
+    public FieldsCoordinates(int i, int j) {
         this.i = i;
         this.j = j;
-    }
-
-    public int getI() {
-        return i;
-    }
-
-    public int getJ() {
-        return j;
-    }
-
-    public int backKey(){
-        return 10*(i+1)+(j+1);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        FieldsCoordinats key = (FieldsCoordinats) o;
+        FieldsCoordinates key = (FieldsCoordinates) o;
         return i == key.i &&
                 j == key.j;
     }

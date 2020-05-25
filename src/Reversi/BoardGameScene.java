@@ -78,7 +78,7 @@ public class BoardGameScene {
             for(int j = 0; j < 8; j++) { //j - columns
                 tabLabel[i][j] = labelEvent();
                 hBox.getChildren().add(tabLabel[i][j]);
-                mapOfFields.addField(i*10+j, new Field(i, j, tabLabel[i][j]));
+                mapOfFields.addField(new FieldsCoordinates(i, j), new Field(i, j, tabLabel[i][j]));
             }
             vBox.getChildren().add(hBox);
         }
