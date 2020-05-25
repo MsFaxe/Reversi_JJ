@@ -1,12 +1,12 @@
-package test3;
+package Reversi;
 
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 
 public class Pawn {
     private String colorOfPawn;
-    private String black = "black";
-    private String white = "white";
+    private final String black = "black";
+    private final String white = "white";
     private ImageView pawnIcon;
 
     public Pawn(String colorOfPuttedPawn) {
@@ -45,6 +45,6 @@ public class Pawn {
         } else {
             color = black;
         }
-        return color + " pawn";
+        return color /*+ " pawn"*/;
     }
 }

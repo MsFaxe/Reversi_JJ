@@ -1,10 +1,9 @@
-package test3;
+package Reversi;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-
     static Stage stage;
 
     public static void main(String[] args) {
@@ -16,12 +15,12 @@ public class Main extends Application {
         stage = primaryStage;
         stage.setTitle("Reversi");
 
-        BoarGameScene board = new BoarGameScene();
-        stage.setScene(board.loadGame());
+        StartGameScene start = new StartGameScene();
+        stage.setScene(start.loadStart());
 
-        GameLogic game = new GameLogic();
-
-        game.startGame();
         stage.show();
+
+//        RecordsBoard recordsBoard = new RecordsBoard();
+//        recordsBoard.showRecords();
     }
 }

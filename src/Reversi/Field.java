@@ -1,4 +1,4 @@
-package test3;
+package Reversi;
 
 import javafx.scene.control.Label;
 
@@ -43,23 +43,13 @@ public class Field {
         pawn.reverse(fieldsLabel);
     }
 
-    public void activateTheField(){
-        ShowPawn show = new ShowPawn();
-        fieldsLabel.setOnMouseClicked(e -> {
-            fieldsLabel.setGraphic(show.setPawnImage("black"));
-            deactivateField();
-        });
-    }
-
     public void deactivateField(){
         fieldsLabel.setPickOnBounds(false);
     }
 
     @Override
     public String toString() {
-        return "Field " + rowIndex +
-                "" + columnIndex +
-                " = " + pawn;
+        return  rowIndex + " " + columnIndex + " " + pawn + " ";
     }
 }
 

@@ -1,4 +1,4 @@
-package test3;
+package Reversi;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
